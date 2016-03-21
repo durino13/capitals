@@ -1,0 +1,20 @@
+{
+  "private": true,
+  "dependencies": {
+    "admin-lte": "^2.3.2",
+    "bootstrap": "^3.3.6",
+    "bootstrap-sass": "^3.0.0",
+    "laravel-elixir": "^4.0.0"
+  },
+  "devDependencies": {
+    "clean-webpack-plugin": "^0.1.8",
+    "copy-webpack-plugin": "^1.1.1",
+    "gulp": "^3.8.8",
+    "node-sass": "^3.4.2",
+    "nodemon": "^1.9.1",
+    "webpack": "^1.12.14"
+  },
+  "scripts": {
+    "build-css": "node-sass resources/assets/sass/app.scss public/assets/css/style.css"
+  }
+}
