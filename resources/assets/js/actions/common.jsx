@@ -22,15 +22,17 @@ export function selectAnswer(answer) {
     setTimeout(function(){
             //alert("Next question");
         loadNewQuestion();
-        }, 1000);
+        }, 500);
 }
 
-export function loadNewQuestionAction(correctAnswer, randomOptions) {
+export function loadNewQuestionAction(country, randomOptions, currentQuestionCount) {
     return {
         type: 'LOAD_NEW_QUESTION',
-        countryName: correctAnswer.countryName,
-        correctAnswer: correctAnswer.option,
-        options: shuffle(randomOptions.concat(correctAnswer))
+        countryName: country.countryName,
+        correctAnswer: country.option,
+        latlng: country.latlng,
+        options: shuffle(randomOptions.concat(country)),
+        currentQuestionCount: currentQuestionCount + 1
     }
 }
 
@@ -52,11 +54,12 @@ export function loadNewQuestion() {
 
     let state = store.getState();
     let allCountries = state.allCountries;
+    let currentQuestionCount = state.currentQuestionCount;
 
-    let correctAnswer = getRandomCountry(allCountries);
+    let country = getRandomCountry(allCountries);
     let randomOptions = getRandomOptions(allCountries);
 
-    store.dispatch(loadNewQuestionAction(correctAnswer, randomOptions));
+    store.dispatch(loadNewQuestionAction(country, randomOptions, currentQuestionCount));
 }
 
 /*
@@ -73,7 +76,8 @@ export function loadAllCountries () {
                     json.map(function(value, index) {
                         myObject[index] = {
                             countryName: value.name,
-                            option: value.capital
+                            option: value.capital,
+                            latlng: value.latlng
                         };
                     })
                     return myObject;
@@ -100,7 +104,7 @@ export function startApplicationAndLoadQuestion() {
 }
 
 // TODO I want to access allCountries directly here, I don't want to pass them from the component ..
-function getRandomOptions(/*allCountries*/) {
+function getRandomOptions() {
 
     // Here I will choose 5 random countries as answer options ..
     let countries = [];

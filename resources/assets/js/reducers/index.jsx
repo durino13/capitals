@@ -24,7 +24,9 @@ export default function reducer(state, action) {
             return Object.assign({}, state, {
                 country: action.countryName,
                 correctAnswer: action.correctAnswer,
-                options: action.options
+                options: action.options,
+                currentQuestionCount: action.currentQuestionCount,
+                latlng: action.latlng
             })
         case 'ANSWER_CORRECT':
             return Object.assign({}, state, {
@@ -38,6 +40,12 @@ export default function reducer(state, action) {
 
             // This is how the initial state looks like ..
             return {
+                // Indicate how many answer are we going to answer during the quiz ..
+                allQuestionsCount: 10,
+
+                // Indicate the current question
+                currentQuestionCount: 0,
+
                 // Indicates, whether the game has been started already ..
                 applicationStarted: false,
 
@@ -47,7 +55,11 @@ export default function reducer(state, action) {
                 // Name of the country we want to guess the capital
                 country: '',
 
+                // Here we will store the name of the city as a string ..
                 correctAnswer: '',
+
+                // Here we will store the coordinates of the capital, so we can display it on the map ..
+                latlng: [],
 
                 suppliedAnswer: '',
 

@@ -13,7 +13,6 @@
 <div class="wrapper">
 
     @include('header')
-    @include('sidebar')
 
     <div class="content-wrapper">
         <section class="content">

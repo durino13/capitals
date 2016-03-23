@@ -1,3 +1,6 @@
 @import "node_modules/bootstrap-sass/assets/stylesheets/bootstrap";
 @import "node_modules/admin-lte/dist/css/AdminLTE.min";               // omit the .css extension
 @import "node_modules/admin-lte/dist/css/skins/_all-skins";           // omit the .css extension
+@import "node_modules/font-awesome/css/font-awesome.min";
+@import "node_modules/admin-lte/plugins/jvectormap/jquery-jvectormap-1.2.2";
+@import "./custom"

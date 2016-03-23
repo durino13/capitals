@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
+import WorldMapContainer from '../containers/WorldMapContainer';
 import * as actions from '../actions/common.jsx';
 
 /*
@@ -22,26 +23,35 @@ export default class QuestionBox extends Component {
 
     render() {
 
-        const { countryName, options, correctAnswerCount, incorrectAnswerCount } = this.props;
+        const { countryName, options, correctAnswerCount, incorrectAnswerCount,
+            allQuestionsCount, currentQuestionCount
+        } = this.props;
 
-        let buttonStatus = this.isAnswerSelected();
+        //let buttonStatus = this.isAnswerSelected();
 
         return (
 
-            <div className="box">
-                <div className="box-header with-border">
-                    <h3 className="box-title">Monthly Recap Report</h3>
-                </div>
+        <div className="row">
+            <div className="col-md-5">
+                <div className="col-md-12">
 
-                <div className="box-body">
-                    <div className="row">
-                        <div className="col-md-6">
+                    <div className="progress-group">
+                        <span className="progress-text">Question</span>
+                        <span className="progress-number"><b>{currentQuestionCount}</b>/{allQuestionsCount}</span>
 
+                        <div className="progress sm">
+                            <div className="progress-bar progress-bar-aqua" style={{width: currentQuestionCount+'0%'}}></div>
+                        </div>
+                    </div>
+
+                    <div className="box">
+                        <div className="box-header with-border">
+                            <h3 className="box-title">Monthly Recap Report</h3>
+                        </div>
+                        <div className="box-body">
                             <div className="callout callout-info">
-                                <h4>I am a success callout!</h4>
                                 <p>What is the capital city of <strong>{countryName}</strong></p>
                             </div>
-
                             <div>{options.map(function(option, i) {
                                 return (
                                     <div key={i}>
@@ -52,31 +62,54 @@ export default class QuestionBox extends Component {
                                 )
                             })}
                             </div>
-
                         </div>
-                        <div className="col-md-3">
-                            <div className="info-box bg-green">
-                                <span className="info-box-icon"><i className="fa fa-thumbs-o-up"></i></span>
-                                <div className="info-box-content">
-                                    <span className="info-box-text">Correct answers</span>
-                                    <span className="info-box-number">{correctAnswerCount}</span>
+                    </div>
+                </div>
+                <div className="col-md-12">
+                    <div className="box">
+                        <div className="box-header with-border">
+                            <h3 className="box-title">Answer statistics</h3>
+                        </div>
 
-                                    <div className="progress">
-                                        <div className="progress-bar" style={{width: '70%'}}></div>
+                        <div className="box-body">
+
+                            <div className="row">
+                                <div className="col-md-6">
+                                    <div className="info-box bg-green">
+                                        <span className="info-box-icon"><i className="fa fa-thumbs-o-up"></i></span>
+                                        <div className="info-box-content">
+                                            <span className="info-box-text">Correct answers</span>
+                                            <span className="info-box-number">{correctAnswerCount}</span>
+
+                                            <div className="progress">
+                                                <div className="progress-bar" style={{width: '70%'}}></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div className="col-md-6">
+                                    <div className="info-box bg-red">
+                                        <span className="info-box-icon"><i className="fa fa-thumbs-o-down"></i></span>
+                                        <div className="info-box-content">
+                                            <span className="info-box-text">Incorrect answers</span>
+                                            <span className="info-box-number">{incorrectAnswerCount}</span>
+
+                                            <div className="progress">
+                                                <div className="progress-bar" style={{width:'70%'}}></div>
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
                 </div>
-                {/* ./box-body */}
-                <div className="box-footer">
-                    <div className="row">
-                    </div>
-                    {/* /.row */}
-                </div>
-                {/* /.box-footer */}
             </div>
+            <div className="col-md-7">
+                <WorldMapContainer />
+            </div>
+        </div>
+
         );
     }
 

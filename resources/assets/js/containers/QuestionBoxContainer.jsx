@@ -3,16 +3,16 @@
 import { connect } from 'react-redux';
 import * as common from '../actions/common.jsx';
 import QuestionBox from '../components/QuestionBox.jsx';
-import { bindActionCreators } from 'redux';
 
 const mapStateToProps = (state) => {
     return {
         countryName: state.country,
         allCountries: state.allCountries,
         options: state.options,
-        state: state,
         correctAnswerCount:state.correctAnswerCount,
-        incorrectAnswerCount:state.incorrectAnswerCount
+        incorrectAnswerCount:state.incorrectAnswerCount,
+        allQuestionsCount:state.allQuestionsCount,
+        currentQuestionCount:state.currentQuestionCount
     }
 }
 

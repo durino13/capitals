@@ -1,5 +1,7 @@
 const webpack = require('webpack');
 const path = require('path');
+const CleanWebpackPlugin = require('clean-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = {
     entry: {
@@ -12,6 +14,22 @@ module.exports = {
         path: 'public/assets/js',
         filename: 'bundle.js'
     },
+    plugins: [
+        new webpack.ProvidePlugin({
+            $: "jquery",
+            jQuery: "jquery",
+            "window.jQuery": "jquery"
+        }),
+        new CleanWebpackPlugin(['fonts'], {
+            dry: "false"
+        }),
+        new CopyWebpackPlugin([
+            {
+                from: 'node_modules/font-awesome/fonts',
+                to: '../fonts'
+            }
+        ])
+    ],
     module: {
         loaders: [
             {
