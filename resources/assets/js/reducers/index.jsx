@@ -43,7 +43,7 @@ export default function reducer(state, action) {
             // This is how the initial state looks like ..
             return {
                 // Indicate how many answer are we going to answer during the quiz ..
-                allQuestionsCount: 3,
+                allQuestionsCount: 1,
 
                 // Indicate the current question
                 currentQuestionCount: 0,

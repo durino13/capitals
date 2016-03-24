@@ -4,6 +4,8 @@ import WorldMapContainer from '../containers/WorldMapContainer';
 import * as actions from '../actions/common.jsx';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Stats from './Stats';
+import QuizResults from './QuizResults.jsx';
+import modal from 'bootstrap';
 
 /*
  * The connect method injects the store and dispatch as new properties of this.props ..
@@ -20,6 +22,12 @@ export default class QuestionBox extends Component {
             return '';
         } else {
             return 'disabled';
+        }
+    }
+
+    componentDidUpdate() {
+        if (this.props.currentQuestionCount > this.props.allQuestionsCount) {
+            $('#quiz-results').modal('show');
         }
     }
 
@@ -85,6 +93,7 @@ export default class QuestionBox extends Component {
             <div className="col-md-7">
                 <WorldMapContainer />
             </div>
+            <QuizResults />
         </div>
 
         );

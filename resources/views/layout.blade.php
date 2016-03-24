@@ -15,9 +15,7 @@
     @include('header')
 
     <div class="content-wrapper">
-        <section class="content">
-            @yield('content')
-        </section>
+        @yield('content')
     </div>
 
 </div>

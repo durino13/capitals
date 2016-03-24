@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import animateCss from 'animate.css-js';
 
-export default class Start extends Component {
+export default class Stats extends Component {
 
     constructor(props) {
 

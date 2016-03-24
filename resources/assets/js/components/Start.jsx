@@ -8,6 +8,8 @@ import Intro from './Intro.jsx';
 const mapStateToProps = (state) => {
     return {
         applicationStarted: state.applicationStarted,
+        currentCount: state.currentQuestionCount,
+        allQuestionsCount: state.allQuestionsCount
     }
 }
 
