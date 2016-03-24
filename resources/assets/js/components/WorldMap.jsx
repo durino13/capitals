@@ -44,12 +44,12 @@ export default class WorldMap extends Component {
         return $('#world-map').vectorMap('get', 'mapObject');
     }
 
-    setMarkers(mapObject, latlng) {
+    setMarkers(mapObject, latlng, countryName) {
         var mapMarkers = [];
         var mapMarkersValues = [];
 
         var plants = [
-            {name: 'VAK', coords: latlng, status: 'mrk'}
+            {name: countryName, coords: latlng, status: 'mrk'}
 
         ];
         mapMarkers.length = 0;
@@ -62,8 +62,8 @@ export default class WorldMap extends Component {
     }
 
     refreshMap() {
-        const { latlng } = this.props;
-        this.setMarkers(this.initMap(), latlng);
+        const { latlng, countryName } = this.props;
+        this.setMarkers(this.initMap(), latlng, countryName);
     }
 
     componentDidMount() {

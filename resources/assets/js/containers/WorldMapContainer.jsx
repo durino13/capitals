@@ -5,7 +5,8 @@ import WorldMap from '../components/WorldMap.jsx';
 
 const mapStateToProps = (state) => {
     return {
-        latlng: state.latlng
+        latlng: state.latlng,
+        countryName: state.country
     }
 }
 

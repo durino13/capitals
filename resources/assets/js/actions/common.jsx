@@ -26,6 +26,7 @@ export function selectAnswer(answer) {
 }
 
 export function loadNewQuestionAction(country, randomOptions, currentQuestionCount) {
+
     return {
         type: 'LOAD_NEW_QUESTION',
         countryName: country.countryName,

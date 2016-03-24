@@ -1,4 +1,4 @@
-// This is actually a store snapshot ..
+import * as helpers from '../helpers/animations.js';
 
 export default function reducer(state, action) {
 
@@ -29,10 +29,12 @@ export default function reducer(state, action) {
                 latlng: action.latlng
             })
         case 'ANSWER_CORRECT':
+            helpers.animate('.correct');
             return Object.assign({}, state, {
                 correctAnswerCount:state.correctAnswerCount+1
             })
         case 'ANSWER_INCORRECT':
+            helpers.animate('.incorrect');
             return Object.assign({}, state, {
                 incorrectAnswerCount:state.incorrectAnswerCount+1
     })
@@ -41,7 +43,7 @@ export default function reducer(state, action) {
             // This is how the initial state looks like ..
             return {
                 // Indicate how many answer are we going to answer during the quiz ..
-                allQuestionsCount: 10,
+                allQuestionsCount: 3,
 
                 // Indicate the current question
                 currentQuestionCount: 0,
