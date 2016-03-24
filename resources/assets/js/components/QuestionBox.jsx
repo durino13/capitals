@@ -38,7 +38,7 @@ export default class QuestionBox extends Component {
                         <span className="progress-number"><b>{currentQuestionCount}</b>/{allQuestionsCount}</span>
 
                         <div className="progress sm">
-                            <div className="progress-bar progress-bar-aqua" style={{width: currentQuestionCount+'0%'}}></div>
+                            <div className="progress-bar progress-bar-aqua" style={{width: (currentQuestionCount/allQuestionsCount)*100+'%'}}></div>
                         </div>
                     </div>
 
