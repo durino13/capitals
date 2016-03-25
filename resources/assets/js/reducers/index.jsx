@@ -9,7 +9,8 @@ export default function reducer(state, action) {
             })
         case 'START_APPLICATION':
             return Object.assign({}, state, {
-                applicationStarted: true
+                applicationStarted: true,
+                userName: action.userName
             })
         case 'LOAD_COUNTRIES':
             return Object.assign({}, state, {
@@ -31,17 +32,28 @@ export default function reducer(state, action) {
         case 'ANSWER_CORRECT':
             helpers.animate('.correct');
             return Object.assign({}, state, {
-                correctAnswerCount:state.correctAnswerCount+1
+                correctAnswerCount:state.correctAnswerCount + 1
             })
         case 'ANSWER_INCORRECT':
             helpers.animate('.incorrect');
             return Object.assign({}, state, {
-                incorrectAnswerCount:state.incorrectAnswerCount+1
-    })
+                incorrectAnswerCount:state.incorrectAnswerCount + 1
+            })
+        case 'DECREASE_BONUS':
+            return Object.assign({}, state, {
+                bonusPoints: state.bonusPoints - action.decreaseStep
+            })
         default:
 
             // This is how the initial state looks like ..
             return {
+
+                // Username
+                userName: '',
+
+                // Bonus points
+                bonusPoints: 1000,
+
                 // Indicate how many answer are we going to answer during the quiz ..
                 allQuestionsCount: 3,
 

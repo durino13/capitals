@@ -1,9 +1,17 @@
 import store from '../index.jsx';
 import fetch from 'isomorphic-fetch'
 
-export function startApplication() {
+export function startApplication(userName) {
     return {
-        type: 'START_APPLICATION'
+        type: 'START_APPLICATION',
+        userName: userName
+    }
+}
+
+export function decreaseBonusPoints(decreaseStep) {
+    return {
+        type: 'DECREASE_BONUS',
+        decreaseStep: decreaseStep
     }
 }
 
@@ -20,7 +28,6 @@ export function selectAnswer(answer) {
 
     // Load next question ..
     setTimeout(function(){
-            //alert("Next question");
         loadNewQuestion();
         }, 500);
 }
@@ -97,11 +104,15 @@ function init(allCountries) {
     }
 }
 
-export function startApplicationAndLoadQuestion() {
+export function startApplicationAndLoadQuestion(userName) {
     let state = store.getState();
     let allCountries = state.allCountries;
-    store.dispatch(startApplication());
+    store.dispatch(startApplication(userName));
     loadNewQuestion(allCountries);
+}
+
+export function decreaseBonus(decreaseStep) {
+    store.dispatch(decreaseBonusPoints(decreaseStep));
 }
 
 // TODO I want to access allCountries directly here, I don't want to pass them from the component ..

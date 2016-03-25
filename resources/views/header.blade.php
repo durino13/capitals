@@ -6,8 +6,13 @@
         <!-- logo for regular state and mobile devices -->
         <span class="logo-lg"><b>Quiz</b> game</span>
     </a>
-    <!-- Header Navbar: style can be found in header.less -->
     <nav class="navbar navbar-static-top" role="navigation">
-
+        <div class="navbar-custom-menu">
+            <ul id="user-info" class="nav navbar-nav">
+                <li>
+                    <a href="#" data-toggle="control-sidebar"><i class="fa fa-gears"></i></a>
+                </li>
+            </ul>
+        </div>
     </nav>
 </header>
