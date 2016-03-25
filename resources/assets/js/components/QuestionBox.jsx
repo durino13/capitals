@@ -20,7 +20,8 @@ const mapStateToProps = (state) => {
         incorrectAnswerCount: state.incorrectAnswerCount,
         allQuestionsCount: state.allQuestionsCount,
         currentQuestionCount: state.currentQuestionCount,
-        bonusPoints: state.bonusPoints
+        bonusPoints: state.bonusPoints,
+        gameOver: state.gameOver
     }
 }
 
@@ -41,7 +42,7 @@ export default class QuestionBox extends Component {
     }
 
     componentDidUpdate() {
-        if (this.props.currentQuestionCount > this.props.allQuestionsCount) {
+        if (this.props.gameOver) {
             $('#quiz-results').modal('show');
         }
     }
@@ -109,7 +110,7 @@ export default class QuestionBox extends Component {
                                 </div>
                                 <div className="row">
                                     <div className="col-md-12" style={{padding: '5px 15px'}}>
-                                        <span className="label label-success" style={{marginRight: '1em'}}>Score: </span> <span>{correctAnswerCount*10}</span>
+                                        <span className="label label-success" style={{marginRight: '1em'}}>Score: </span> <span>{correctAnswerCount*100}</span>
                                     </div>
                                     <div className="col-md-12" style={{padding: '5px 15px'}}>
                                         <span className="label label-success" style={{marginRight: '1em'}}>Bonus points: </span> <span>{bonusPoints}</span>

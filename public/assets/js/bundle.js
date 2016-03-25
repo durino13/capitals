@@ -69,21 +69,21 @@
 
 	var _App2 = _interopRequireDefault(_App);
 
-	var _Root = __webpack_require__(218);
+	var _Root = __webpack_require__(219);
 
 	var _Root2 = _interopRequireDefault(_Root);
 
-	var _UserInfo = __webpack_require__(219);
+	var _UserInfo = __webpack_require__(220);
 
 	var _UserInfo2 = _interopRequireDefault(_UserInfo);
 
 	var _redux = __webpack_require__(167);
 
-	var _reducers = __webpack_require__(220);
+	var _reducers = __webpack_require__(221);
 
 	var _reducers2 = _interopRequireDefault(_reducers);
 
-	var _reduxThunk = __webpack_require__(222);
+	var _reduxThunk = __webpack_require__(223);
 
 	var _reduxThunk2 = _interopRequireDefault(_reduxThunk);
 
@@ -21354,7 +21354,7 @@
 
 	var _QuestionBox2 = _interopRequireDefault(_QuestionBox);
 
-	var _Intro = __webpack_require__(217);
+	var _Intro = __webpack_require__(218);
 
 	var _Intro2 = _interopRequireDefault(_Intro);
 
@@ -21461,10 +21461,13 @@
 	    // Evaluate answer ..
 	    evaluateAnswer();
 
-	    // Load next question ..
-	    setTimeout(function () {
-	        loadNewQuestion();
-	    }, 500);
+	    // Check, if the game is not yet over ..
+	    if (!isGameOver()) {
+	        // Load next question, but wait a bit
+	        setTimeout(function () {
+	            loadNewQuestion();
+	        }, 200);
+	    }
 	}
 
 	function loadNewQuestionAction(country, randomOptions, currentQuestionCount) {
@@ -21491,6 +21494,18 @@
 	            type: 'ANSWER_INCORRECT'
 	        });
 	    }
+	}
+
+	function isGameOver() {
+	    var state = _index2.default.getState();
+
+	    if (state.currentQuestionCount >= state.allQuestionsCount) {
+	        _index2.default.dispatch({
+	            type: 'GAME_OVER'
+	        });
+	        return true;
+	    }
+	    return false;
 	}
 
 	function loadNewQuestion() {
@@ -22040,11 +22055,11 @@
 
 	var _QuizResults2 = _interopRequireDefault(_QuizResults);
 
-	var _bootstrap = __webpack_require__(202);
+	var _bootstrap = __webpack_require__(203);
 
 	var _bootstrap2 = _interopRequireDefault(_bootstrap);
 
-	var _Timer = __webpack_require__(215);
+	var _Timer = __webpack_require__(216);
 
 	var _Timer2 = _interopRequireDefault(_Timer);
 
@@ -22070,7 +22085,8 @@
 	        incorrectAnswerCount: state.incorrectAnswerCount,
 	        allQuestionsCount: state.allQuestionsCount,
 	        currentQuestionCount: state.currentQuestionCount,
-	        bonusPoints: state.bonusPoints
+	        bonusPoints: state.bonusPoints,
+	        gameOver: state.gameOver
 	    };
 	};
 
@@ -22095,7 +22111,7 @@
 	    }, {
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate() {
-	            if (this.props.currentQuestionCount > this.props.allQuestionsCount) {
+	            if (this.props.gameOver) {
 	                $('#quiz-results').modal('show');
 	            }
 	        }
@@ -22252,7 +22268,7 @@
 	                                        _react2.default.createElement(
 	                                            'span',
 	                                            null,
-	                                            correctAnswerCount * 10
+	                                            correctAnswerCount * 100
 	                                        )
 	                                    ),
 	                                    _react2.default.createElement(
@@ -25758,6 +25774,12 @@
 
 	var _reactRedux = __webpack_require__(161);
 
+	var _database = __webpack_require__(202);
+
+	var db = _interopRequireWildcard(_database);
+
+	function _interopRequireWildcard(obj) { if (obj && obj.__esModule) { return obj; } else { var newObj = {}; if (obj != null) { for (var key in obj) { if (Object.prototype.hasOwnProperty.call(obj, key)) newObj[key] = obj[key]; } } newObj.default = obj; return newObj; } }
+
 	function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 	function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
@@ -25769,7 +25791,8 @@
 	var mapStateToProps = function mapStateToProps(state) {
 	    return {
 	        bonusPoints: state.bonusPoints,
-	        score: state.correctAnswerCount * 10
+	        score: state.correctAnswerCount * 100,
+	        gameOver: state.gameOver
 	    };
 	};
 
@@ -25783,8 +25806,19 @@
 	    }
 
 	    _createClass(QuizResults, [{
+	        key: 'sendResultsToServer',
+	        value: function sendResultsToServer() {
+	            db.sendResults('Juraj', 300);
+	        }
+	    }, {
 	        key: 'render',
 	        value: function render() {
+
+	            // TODO This logic should not be here, it should be in the actions ..
+	            // Send the results to the server, if the game is completed .. ...
+	            if (this.props.gameOver) {
+	                this.sendResultsToServer();
+	            }
 
 	            return _react2.default.createElement(
 	                'section',
@@ -25828,7 +25862,34 @@
 	                                        _react2.default.createElement(
 	                                            'p',
 	                                            null,
-	                                            'Total points earned: ',
+	                                            _react2.default.createElement(
+	                                                'b',
+	                                                null,
+	                                                'Score:'
+	                                            ),
+	                                            ' ',
+	                                            this.props.score
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'p',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'b',
+	                                                null,
+	                                                'Bonus:'
+	                                            ),
+	                                            ' ',
+	                                            this.props.bonusPoints
+	                                        ),
+	                                        _react2.default.createElement(
+	                                            'p',
+	                                            null,
+	                                            _react2.default.createElement(
+	                                                'b',
+	                                                null,
+	                                                'Total points earned:'
+	                                            ),
+	                                            ' ',
 	                                            this.props.score + this.props.bonusPoints
 	                                        )
 	                                    ),
@@ -25863,10 +25924,32 @@
 /* 202 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/* WEBPACK VAR INJECTION */(function($) {"use strict";
+
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
+	exports.sendResults = sendResults;
+	function sendResults(userName, score) {
+	    $.ajax({
+	        method: 'GET',
+	        // TODO Hardcoded URL, needs to be changed ..
+	        url: "http://capitals.local.d/stats/create",
+	        context: document.body,
+	        data: { userName: userName, score: score }
+	    }).done(function () {
+	        $(this).addClass("done");
+	    });
+	}
+	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
+
+/***/ },
+/* 203 */
+/***/ function(module, exports, __webpack_require__) {
+
 	'use strict';
 
 	// This file is autogenerated via the `commonjs` Grunt task. You can require() this file in a CommonJS environment.
-	__webpack_require__(203);
 	__webpack_require__(204);
 	__webpack_require__(205);
 	__webpack_require__(206);
@@ -25878,9 +25961,10 @@
 	__webpack_require__(212);
 	__webpack_require__(213);
 	__webpack_require__(214);
+	__webpack_require__(215);
 
 /***/ },
-/* 203 */
+/* 204 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -25949,7 +26033,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 204 */
+/* 205 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -26042,7 +26126,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 205 */
+/* 206 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -26164,7 +26248,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 206 */
+/* 207 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -26400,7 +26484,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 207 */
+/* 208 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -26588,7 +26672,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 208 */
+/* 209 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -26746,7 +26830,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 209 */
+/* 210 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -27060,7 +27144,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 210 */
+/* 211 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -27551,7 +27635,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 211 */
+/* 212 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -27660,7 +27744,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 212 */
+/* 213 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -27821,7 +27905,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 213 */
+/* 214 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -27957,7 +28041,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 214 */
+/* 215 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function(jQuery) {'use strict';
@@ -28119,7 +28203,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 215 */
+/* 216 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -28139,7 +28223,7 @@
 
 	var _reactRedux = __webpack_require__(161);
 
-	var _jqueryKnob = __webpack_require__(216);
+	var _jqueryKnob = __webpack_require__(217);
 
 	var _jqueryKnob2 = _interopRequireDefault(_jqueryKnob);
 
@@ -28183,8 +28267,8 @@
 	                max: 1000,
 	                min: 0,
 	                readOnly: true,
-	                width: 100,
-	                height: 100,
+	                width: 70,
+	                height: 70,
 	                fgColor: '#00C0EF',
 	                bgColor: '#659FB9',
 	                thickness: 0.06
@@ -28200,7 +28284,7 @@
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate() {
 
-	            if (this.props.bonusPoints < 0 || this.props.allQuestionsCount === this.props.currentQuestionCount) {
+	            if (this.props.bonusPoints <= 0 || this.props.allQuestionsCount === this.props.currentQuestionCount) {
 	                clearInterval(this.interval);
 	            } else {
 	                $('.bonus').val(this.props.bonusPoints);
@@ -28210,11 +28294,11 @@
 	        key: 'render',
 	        value: function render() {
 
-	            return _react2.default.createElement('div', null)
-	            /*<div>
-	                    <input type="text" className="bonus" />
-	                </div>*/
-	            ;
+	            return _react2.default.createElement(
+	                'div',
+	                null,
+	                _react2.default.createElement('input', { type: 'text', className: 'bonus' })
+	            );
 	        }
 	    }]);
 
@@ -28224,7 +28308,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 216 */
+/* 217 */
 /***/ function(module, exports, __webpack_require__) {
 
 	var __WEBPACK_AMD_DEFINE_FACTORY__, __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;"use strict";
@@ -28429,7 +28513,7 @@
 	});
 
 /***/ },
-/* 217 */
+/* 218 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28563,7 +28647,7 @@
 	exports.default = Intro;
 
 /***/ },
-/* 218 */
+/* 219 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28625,7 +28709,7 @@
 	exports.default = Root;
 
 /***/ },
-/* 219 */
+/* 220 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28702,7 +28786,7 @@
 	exports.default = UserInfo;
 
 /***/ },
-/* 220 */
+/* 221 */
 /***/ function(module, exports, __webpack_require__) {
 
 	'use strict';
@@ -28712,7 +28796,7 @@
 	});
 	exports.default = reducer;
 
-	var _animations = __webpack_require__(221);
+	var _animations = __webpack_require__(222);
 
 	var helpers = _interopRequireWildcard(_animations);
 
@@ -28755,11 +28839,16 @@
 	        case 'ANSWER_INCORRECT':
 	            helpers.animate('.incorrect');
 	            return Object.assign({}, state, {
-	                incorrectAnswerCount: state.incorrectAnswerCount + 1
+	                incorrectAnswerCount: state.incorrectAnswerCount + 1,
+	                bonusPoints: state.bonusPoints - 100
 	            });
 	        case 'DECREASE_BONUS':
 	            return Object.assign({}, state, {
 	                bonusPoints: state.bonusPoints - action.decreaseStep
+	            });
+	        case 'GAME_OVER':
+	            return Object.assign({}, state, {
+	                gameOver: true
 	            });
 	        default:
 
@@ -28800,13 +28889,15 @@
 
 	                correctAnswerCount: 0,
 
-	                incorrectAnswerCount: 0
+	                incorrectAnswerCount: 0,
+
+	                gameOver: false
 	            };
 	    }
 	}
 
 /***/ },
-/* 221 */
+/* 222 */
 /***/ function(module, exports, __webpack_require__) {
 
 	/* WEBPACK VAR INJECTION */(function($) {'use strict';
@@ -28824,7 +28915,7 @@
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
 
 /***/ },
-/* 222 */
+/* 223 */
 /***/ function(module, exports) {
 
 	'use strict';

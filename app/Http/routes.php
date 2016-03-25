@@ -15,6 +15,9 @@ Route::get('/', function () {
     return view('content');
 });
 
+// Register the resource controller, so we are able to process the database requests ..
+Route::resource('stats', 'StatsController');
+
 /*
 |--------------------------------------------------------------------------
 | Application Routes

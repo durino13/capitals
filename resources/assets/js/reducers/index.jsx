@@ -37,11 +37,16 @@ export default function reducer(state, action) {
         case 'ANSWER_INCORRECT':
             helpers.animate('.incorrect');
             return Object.assign({}, state, {
-                incorrectAnswerCount:state.incorrectAnswerCount + 1
+                incorrectAnswerCount:state.incorrectAnswerCount + 1,
+                bonusPoints:state.bonusPoints - 100
             })
         case 'DECREASE_BONUS':
             return Object.assign({}, state, {
                 bonusPoints: state.bonusPoints - action.decreaseStep
+            })
+        case 'GAME_OVER':
+            return Object.assign({}, state, {
+                gameOver: true
             })
         default:
 
@@ -82,7 +87,9 @@ export default function reducer(state, action) {
 
                 correctAnswerCount: 0,
 
-                incorrectAnswerCount: 0
+                incorrectAnswerCount: 0,
+
+                gameOver: false
             }
     }
 

@@ -26,10 +26,14 @@ export function selectAnswer(answer) {
     // Evaluate answer ..
     evaluateAnswer();
 
-    // Load next question ..
-    setTimeout(function(){
-        loadNewQuestion();
-        }, 500);
+    // Check, if the game is not yet over ..
+    if (!isGameOver()) {
+        // Load next question, but wait a bit
+        setTimeout(function(){
+            loadNewQuestion();
+        }, 200);
+    }
+
 }
 
 export function loadNewQuestionAction(country, randomOptions, currentQuestionCount) {
@@ -56,6 +60,18 @@ function evaluateAnswer() {
             type: 'ANSWER_INCORRECT'
         })
     }
+}
+
+function isGameOver() {
+    let state = store.getState();
+
+    if (state.currentQuestionCount >= state.allQuestionsCount) {
+        store.dispatch({
+            type: 'GAME_OVER'
+        });
+        return true;
+    }
+    return false;
 }
 
 export function loadNewQuestion() {
