@@ -44,6 +44,7 @@ export default class WorldMap extends Component {
         return $('#world-map').vectorMap('get', 'mapObject');
     }
 
+    // Set the circle markers on the map based on the latlng values from the JSON
     setMarkers(mapObject, latlng, countryName) {
         var mapMarkers = [];
         var mapMarkersValues = [];
@@ -61,23 +62,34 @@ export default class WorldMap extends Component {
         mapObject.addMarkers(mapMarkers, []);
     }
 
+    /*
+     * Refresh the map on the screen
+     */
     refreshMap() {
         const { latlng, countryName } = this.props;
+        // First remove the previous map and then draw a new one ..
+        try { $('#world-map').vectorMap('get', 'mapObject').remove(); }
+        catch(err) {}
         this.setMarkers(this.initMap(), latlng, countryName);
     }
 
+    /*
+     * This will render the map initially
+     */
     componentDidMount() {
         this.refreshMap();
     }
 
+    /*
+     *This will render the map after every answer
+     */
     componentDidUpdate() {
         this.refreshMap();
     }
 
     render() {
-
         return (
-            <div id="world-map" style={{width: '600px'}, {height: '600px'}}></div>
+            <div id="world-map" style={{width: '600px'}, {height: '500px'}}></div>
         );
     }
 

@@ -23898,6 +23898,9 @@
 	            // This line will regurn a mapObject, so we can work with this object later ..
 	            return $('#world-map').vectorMap('get', 'mapObject');
 	        }
+
+	        // Set the circle markers on the map based on the latlng values from the JSON
+
 	    }, {
 	        key: 'setMarkers',
 	        value: function setMarkers(mapObject, latlng, countryName) {
@@ -23913,20 +23916,39 @@
 	            }
 	            mapObject.addMarkers(mapMarkers, []);
 	        }
+
+	        /*
+	         * Refresh the map on the screen
+	         */
+
 	    }, {
 	        key: 'refreshMap',
 	        value: function refreshMap() {
 	            var _props = this.props;
 	            var latlng = _props.latlng;
 	            var countryName = _props.countryName;
+	            // First remove the previous map and then draw a new one ..
 
+	            try {
+	                $('#world-map').vectorMap('get', 'mapObject').remove();
+	            } catch (err) {}
 	            this.setMarkers(this.initMap(), latlng, countryName);
 	        }
+
+	        /*
+	         * This will render the map initially
+	         */
+
 	    }, {
 	        key: 'componentDidMount',
 	        value: function componentDidMount() {
 	            this.refreshMap();
 	        }
+
+	        /*
+	         *This will render the map after every answer
+	         */
+
 	    }, {
 	        key: 'componentDidUpdate',
 	        value: function componentDidUpdate() {
@@ -23935,8 +23957,7 @@
 	    }, {
 	        key: 'render',
 	        value: function render() {
-
-	            return _react2.default.createElement('div', { id: 'world-map', style: ({ width: '600px' }, { height: '600px' }) });
+	            return _react2.default.createElement('div', { id: 'world-map', style: ({ width: '600px' }, { height: '500px' }) });
 	        }
 	    }]);
 
@@ -28306,7 +28327,7 @@
 	            // This is how the initial state looks like ..
 	            return {
 	                // Indicate how many answer are we going to answer during the quiz ..
-	                allQuestionsCount: 1,
+	                allQuestionsCount: 3,
 
 	                // Indicate the current question
 	                currentQuestionCount: 0,
