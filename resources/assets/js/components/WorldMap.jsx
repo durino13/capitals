@@ -1,8 +1,17 @@
 import React, { Component } from 'react';
 import * as actions from '../actions/common.jsx';
+import { connect } from 'react-redux';
 import jvectormap from '../../../../node_modules/admin-lte/plugins/jvectormap/jquery-jvectormap-1.2.2.min.js';
 import worldmill from '../../../../node_modules/admin-lte/plugins/jvectormap/jquery-jvectormap-world-mill-en';
 
+const mapStateToProps = (state) => {
+    return {
+        latlng: state.latlng,
+        countryName: state.country
+    }
+}
+
+@connect(mapStateToProps)
 export default class WorldMap extends Component {
 
     constructor(props) {

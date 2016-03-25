@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import * as common from '../actions/common.jsx';
 import { connect } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import QuestionBoxContainer from '../containers/QuestionBoxContainer.jsx';
+//import QuestionBoxContainer from '../containers/QuestionBoxContainer.jsx';
+import QuestionBox from './QuestionBox.jsx';
 import Intro from './Intro.jsx';
 
 const mapStateToProps = (state) => {
@@ -28,7 +29,7 @@ export default class Start extends Component {
 
         if (applicationStarted) {
             return (
-                <QuestionBoxContainer />
+                <QuestionBox />
             )
         } else {
             return (

@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import WorldMapContainer from '../containers/WorldMapContainer';
+import WorldMap from './WorldMap';
 import * as actions from '../actions/common.jsx';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Stats from './Stats';
@@ -10,6 +10,19 @@ import modal from 'bootstrap';
 /*
  * The connect method injects the store and dispatch as new properties of this.props ..
  */
+const mapStateToProps = (state) => {
+    return {
+        countryName: state.country,
+        allCountries: state.allCountries,
+        options: state.options,
+        correctAnswerCount:state.correctAnswerCount,
+        incorrectAnswerCount:state.incorrectAnswerCount,
+        allQuestionsCount:state.allQuestionsCount,
+        currentQuestionCount:state.currentQuestionCount
+    }
+}
+
+@connect(mapStateToProps)
 export default class QuestionBox extends Component {
 
     constructor(props) {
@@ -91,7 +104,7 @@ export default class QuestionBox extends Component {
                 </div>
             </div>
             <div className="col-md-7">
-                <WorldMapContainer />
+                <WorldMap />
             </div>
             <QuizResults />
         </div>

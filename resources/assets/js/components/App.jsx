@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import QuestionBoxContainer from '../containers/QuestionBoxContainer.jsx';
 import Start from './Start.jsx';
 
 /*
