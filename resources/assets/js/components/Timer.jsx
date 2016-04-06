@@ -32,11 +32,11 @@ export default class Timer extends Component {
             thickness: 0.06
         });
 
-        // Set the initial value and decrease bonus by 10 every 100ms
+        // Set the initial value and decrease bonus by 10 every 3s
         $('.bonus').val(1000);
         this.interval = setInterval(function() {
             common.decreaseBonus(10)
-        }, 700)
+        }, 3000)
     }
 
     componentDidUpdate() {

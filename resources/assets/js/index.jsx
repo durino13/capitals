@@ -7,12 +7,16 @@ import { createStore, applyMiddleware} from 'redux';
 import reducer from './reducers';
 import { render } from 'react-dom'
 import thunkMiddleware from 'redux-thunk'
+import createLogger from 'redux-logger';
 
+const logger = createLogger({
+    collapsed: true
+});
 let store = createStore(
     reducer,
     'test',
     applyMiddleware(
-        thunkMiddleware
+        thunkMiddleware, logger
     ));
 
 // Render the quiz component

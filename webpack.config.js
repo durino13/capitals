@@ -37,10 +37,13 @@ module.exports = {
                 loader: ['babel'],
                 query: {
                     cacheDirectory: true,
-                    plugins: ['transform-decorators-legacy' ],
+                    plugins: ['transform-decorators-legacy'],
                     presets: ['es2015', 'react']
                 }
             }
         ]
+    },
+    watchOptions: {
+        poll: true
     }
 };

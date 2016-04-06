@@ -1,3 +1,13 @@
+export function getResults() {
+    return $.ajax({
+        method: 'GET',
+        // TODO Hardcoded URL, needs to be changed ..
+        url: "http://capitals.local.d/stats",
+        context: document.body,
+        data: {count: 3}
+    });
+}
+
 export function sendResults(userName, score) {
     $.ajax({
         method: 'GET',
@@ -5,7 +15,5 @@ export function sendResults(userName, score) {
         url: "http://capitals.local.d/stats/create",
         context: document.body,
         data: {userName: userName, score: score}
-    }).done(function() {
-        $( this ).addClass( "done" );
-    });
+    })
 }

@@ -2,6 +2,7 @@ import * as helpers from '../helpers/animations.js';
 
 export default function reducer(state, action) {
 
+    // TODO Sometimes, I use action params, sometimes, I set the new state directly using primitive types .. Consolidate it ..
     switch(action.type) {
         case 'ANSWER_SELECTED':
             return Object.assign({}, state, {
@@ -10,7 +11,6 @@ export default function reducer(state, action) {
         case 'START_APPLICATION':
             return Object.assign({}, state, {
                 applicationStarted: true,
-                userName: action.userName
             })
         case 'LOAD_COUNTRIES':
             return Object.assign({}, state, {
@@ -48,10 +48,46 @@ export default function reducer(state, action) {
             return Object.assign({}, state, {
                 gameOver: true
             })
+        case 'RESULTS_LOADED':
+            return Object.assign({}, state, {
+                resultsLoaded: true,
+                results: action.results
+            })
+        case 'INTRO_FORM_VALID':
+            return Object.assign({}, state, {
+                introFormValid: true,
+                startAppButtonPressed: true
+            })
+        case 'INTRO_FORM_NOT_VALID':
+            return Object.assign({}, state, {
+                introFormValid: false,
+                startAppButtonPressed: true
+            })
+        case 'RESET_STATE':
+            return Object.assign({}, state, {
+                applicationStarted: action.applicationStarted,
+                bonusPoints: action.bonusPoints,
+                correctAnswerCount: action.correctAnswerCount,
+                currentQuestionCount: action.currentQuestionCount,
+                gameOver: action.gameOver,
+                incorrectAnswerCount: action.incorrectAnswerCount,
+                introFormValid: action.introFormValid,
+                resultsLoaded: action.resultsLoaded,
+                startAppButtonPressed: action.startAppButtonPressed
+            })
+        case 'SET_USERNAME':
+            return Object.assign({}, state, {
+                userName: action.userName
+            })
+        case 'DEFAULT':
         default:
 
             // This is how the initial state looks like ..
             return {
+
+                /*
+                 * Global application state ..
+                 */
 
                 // Username
                 userName: '',
@@ -89,7 +125,23 @@ export default function reducer(state, action) {
 
                 incorrectAnswerCount: 0,
 
-                gameOver: false
+                gameOver: false,
+
+                /*
+                 * Scoreboard results
+                 */
+
+                resultsLoaded: false,
+
+                results: [],
+
+                /*
+                 * Intro form validation
+                 */
+
+                introFormValid: false,
+
+                startAppButtonPressed: false
             }
     }
 

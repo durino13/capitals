@@ -4,7 +4,7 @@ import WorldMap from './WorldMap';
 import * as actions from '../actions/common.jsx';
 import ReactCSSTransitionGroup from 'react-addons-css-transition-group';
 import Stats from './Stats';
-import QuizResults from './QuizResults.jsx';
+import QuizResults from './QuizResults/QuizResults.jsx';
 import modal from 'bootstrap';
 import Timer from './Timer.jsx';
 
@@ -55,9 +55,9 @@ export default class QuestionBox extends Component {
 
             <div className="row">
                 <div className="col-md-5">
-                    <div className="col-xs-12 text-center" style={{borderRight: '1px solid #f4f4f4'}}>
+                    {/*<div className="col-xs-12 text-center" style={{borderRight: '1px solid #f4f4f4'}}>
                         <Timer />
-                    </div>
+                    </div>*/}
                     <div className="col-md-12">
 
                         <div className="progress-group">

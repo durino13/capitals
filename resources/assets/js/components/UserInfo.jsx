@@ -1,6 +1,10 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 
+
+// TODO Nezobrazuje sa mi username ..
+
+
 // Access the state variable from the Provider component ...
 const mapStateToProps = (state) => {
     return {

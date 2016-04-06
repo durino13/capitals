@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import * as db from '../helpers/database.js';
+import * as actions from './actions.jsx';
 
 const mapStateToProps = (state) => {
     return {
@@ -17,17 +17,7 @@ export default class QuizResults extends Component {
         super(props);
     }
 
-    sendResultsToServer() {
-        db.sendResults('Juraj',300);
-    }
-
     render() {
-
-        // TODO This logic should not be here, it should be in the actions ..
-        // Send the results to the server, if the game is completed .. ...
-        if (this.props.gameOver) {
-            this.sendResultsToServer();
-        }
 
         return (
 
@@ -50,8 +40,8 @@ export default class QuizResults extends Component {
                                         <p><b>Total points earned:</b> {this.props.score + this.props.bonusPoints}</p>
                                     </div>
                                     <div className="modal-footer">
-                                        <button type="button" className="btn btn-outline" data-dismiss="modal">Replay</button>
-                                        <button type="button" className="btn btn-outline" data-dismiss="modal">Quit</button>
+                                        <button type="button" className="btn btn-outline" data-dismiss="modal" onClick={() => {actions.replay()}}>Replay</button>
+                                        <button type="button" className="btn btn-outline" data-dismiss="modal" onClick={actions.quit.bind(this)}>Quit</button>
                                     </div>
                                 </div>
                             </div>

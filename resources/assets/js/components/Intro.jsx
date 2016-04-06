@@ -1,16 +1,32 @@
 import React, { Component } from 'react';
 import * as common from '../actions/common.jsx';
+import Score from './ResultsTable';
+import { connect } from 'react-redux';
 
+const mapStateToProps = (state) => {
+    return {
+        introFormValid: state.introFormValid,
+        startAppButtonPressed: state.startAppButtonPressed
+    }
+}
+
+@connect(mapStateToProps)
 export default class Intro extends Component {
 
     constructor(props) {
         super(props);
+        // I have to do this, so the methods will be accessible in the render method ..
         this.onNameChange = this.onNameChange.bind(this);
+        this.renderErrorClass = this.renderErrorClass.bind(this);
         userName: '';
     }
 
     onNameChange(e) {
-        this.userName = e.target.value;
+        common.setUsername(e.target.value);
+    }
+
+    renderErrorClass() {
+        return (!(this.props.introFormValid) && this.props.startAppButtonPressed) ? 'form-group has-error' : 'form-group';
     }
 
     render() {
@@ -28,7 +44,7 @@ export default class Intro extends Component {
                             </div>
                             <div className="form-horizontal">
                                 <div className="box-body">
-                                    <div className="form-group">
+                                    <div className={this.renderErrorClass()}>
                                         <label htmlFor="name" className="col-sm-3 control-label">Your name</label>
                                         <div className="col-sm-9">
                                             <input type="text" className="form-control" id="name" placeholder="Enter your name" autoComplete="off" onChange={this.onNameChange} />
@@ -47,6 +63,11 @@ export default class Intro extends Component {
                             </div>
                         </div>
 
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-4 col-md-offset-4">
+                        <Score />
                     </div>
                 </div>
 

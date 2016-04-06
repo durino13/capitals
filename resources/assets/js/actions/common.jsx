@@ -1,10 +1,11 @@
 import store from '../index.jsx';
 import fetch from 'isomorphic-fetch'
+import * as db from '../helpers/database.js';
+import * as debug from '../helpers/debug.js';
 
-export function startApplication(userName) {
+export function startApplication() {
     return {
         type: 'START_APPLICATION',
-        userName: userName
     }
 }
 
@@ -17,6 +18,8 @@ export function decreaseBonusPoints(decreaseStep) {
 
 export function selectAnswer(answer) {
 
+    let state = store.getState();
+
     // Dispatch the answer ..
     store.dispatch({
         type: 'ANSWER_SELECTED',
@@ -28,16 +31,21 @@ export function selectAnswer(answer) {
 
     // Check, if the game is not yet over ..
     if (!isGameOver()) {
-        // Load next question, but wait a bit
+        // Load next question, but wait a bit, co you can check the result of previous one ..
         setTimeout(function(){
-            loadNewQuestion();
+            store.dispatch(loadNewQuestion());
         }, 200);
+    } else {
+
+        // TODO put total score in the store .. Don't calculate it ..
+        // TODO Make sure, there's security implemented .. So it's not possible to submit results manually ..
+
+        db.sendResults(state.userName, state.correctAnswerCount*100 + state.bonusPoints);
     }
 
 }
 
 export function loadNewQuestionAction(country, randomOptions, currentQuestionCount) {
-
     return {
         type: 'LOAD_NEW_QUESTION',
         countryName: country.countryName,
@@ -83,7 +91,7 @@ export function loadNewQuestion() {
     let country = getRandomCountry(allCountries);
     let randomOptions = getRandomOptions(allCountries);
 
-    store.dispatch(loadNewQuestionAction(country, randomOptions, currentQuestionCount));
+    return loadNewQuestionAction(country, randomOptions, currentQuestionCount);
 }
 
 /*
@@ -120,18 +128,42 @@ function init(allCountries) {
     }
 }
 
-export function startApplicationAndLoadQuestion(userName) {
+export function introFormIsNotValid() {
+    return {
+        type: 'INTRO_FORM_NOT_VALID',
+        introFormValid: false
+    }
+}
+
+export function introFormIsValid() {
+    return {
+        type: 'INTRO_FORM_VALID',
+        introFormValid: true
+    }
+}
+
+export function startApplicationAndLoadQuestion() {
     let state = store.getState();
     let allCountries = state.allCountries;
-    store.dispatch(startApplication(userName));
-    loadNewQuestion(allCountries);
+    let introFormValid = state.infoFormValid;
+
+    (state.userName === undefined) ? introFormValid = false : introFormValid = true;
+
+    store.dispatch(resetState());
+
+    if (introFormValid) {
+        store.dispatch(introFormIsValid());
+        store.dispatch(startApplication());
+        store.dispatch(loadNewQuestion(allCountries));
+    } else {
+        store.dispatch(introFormIsNotValid());
+    }
 }
 
 export function decreaseBonus(decreaseStep) {
     store.dispatch(decreaseBonusPoints(decreaseStep));
 }
 
-// TODO I want to access allCountries directly here, I don't want to pass them from the component ..
 function getRandomOptions() {
 
     // Here I will choose 5 random countries as answer options ..
@@ -158,6 +190,35 @@ function getRandomCountry(allCountries) {
     var randomKey = Math.floor(Math.random()*allCountries.length)+1;
     // Return random country from the list of all countries ..
     return allCountries[randomKey];
+}
+
+export function loadResults(res) {
+    store.dispatch({
+        type: 'RESULTS_LOADED',
+        results: res
+    })
+}
+
+export function setUsername(username) {
+    store.dispatch({
+        type: 'SET_USERNAME',
+        userName: username
+    })
+}
+
+export function resetState() {
+    return {
+        type: 'RESET_STATE',
+        applicationStarted:false,
+        bonusPoints:1000,
+        correctAnswerCount:0,
+        currentQuestionCount:0,
+        gameOver:false,
+        incorrectAnswerCount:0,
+        introFormValid:true,
+        resultsLoaded:true,
+        startAppButtonPressed:true,
+    }
 }
 
 // TODO move function to an external library ..

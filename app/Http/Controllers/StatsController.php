@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use App\Stats;
 
 use App\Http\Requests;
 
@@ -13,9 +14,9 @@ class StatsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function index()
+    public function index(Request $request)
     {
-        //
+        return response()->json(Stats::limit(5)->orderBy('score', 'desc')->get());
     }
 
     /**
@@ -23,9 +24,20 @@ class StatsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create(Request $request)
     {
-        echo 'It works';
+
+        try {
+            $stats = new Stats();
+            $stats->username = $request->userName;
+            $stats->score = $request->score;
+
+            if ($stats->save()) {
+                echo json_encode(['result' => true]);
+            }
+        } catch (Exception $e) {
+            echo json_encode(['result' => false]);
+        }
         exit();
     }
 
