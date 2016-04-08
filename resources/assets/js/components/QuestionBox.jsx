@@ -55,9 +55,9 @@ export default class QuestionBox extends Component {
 
             <div className="row">
                 <div className="col-md-5">
-                    {/*<div className="col-xs-12 text-center" style={{borderRight: '1px solid #f4f4f4'}}>
+                    <div className="col-xs-12 text-center" style={{borderRight: '1px solid #f4f4f4'}}>
                         <Timer />
-                    </div>*/}
+                    </div>
                     <div className="col-md-12">
 
                         <div className="progress-group">

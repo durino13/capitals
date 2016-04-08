@@ -8,13 +8,13 @@ export function getResults() {
     });
 }
 
-export function sendResults(userName, score, ca, ia) {
+export function sendResults(userName, score) {
     $.ajax({
         method: 'GET',
         // TODO Hardcoded URL, needs to be changed ..
         url: "http://capitals.local.d/stats/create",
         context: document.body,
-        data: {userName: userName, score: score, correctAnswers: ca, incorrectAnswers: ia}
+        data: {userName: userName, score: score}
     })
 }
 

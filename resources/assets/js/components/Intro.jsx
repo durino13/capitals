@@ -19,6 +19,7 @@ export default class Intro extends Component {
         super(props);
         // I have to do this, so the methods will be accessible in the render method ..
         this.onNameChange = this.onNameChange.bind(this);
+        // TODO We should bind using arrow function here .. This is an old way ..
         this.renderValidUsernameErrorClass = this.renderValidUsernameErrorClass.bind(this);
         this.renderValidCaptchaErrorClass = this.renderValidCaptchaErrorClass.bind(this);
         userName: '';

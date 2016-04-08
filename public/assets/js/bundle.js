@@ -21497,7 +21497,7 @@
 	        // TODO put total score in the store .. Don't calculate it ..
 	        // TODO Make sure, there's security implemented .. So it's not possible to submit results manually ..
 	        state = _index2.default.getState();
-	        db.sendResults(state.userName, state.correctAnswerCount * 100 + state.bonusPoints, state.correctAnswerCount, state.incorrectAnswerCount);
+	        db.sendResults(state.userName, state.correctAnswerCount * 100 + state.bonusPoints);
 	    }
 	}
 
@@ -21613,8 +21613,6 @@
 	    var state = _index2.default.getState();
 	    var isFormValid = true;
 
-	    console.log(state.validUsername);
-
 	    if (state.userName === '') {
 	        isFormValid = false;
 	        _index2.default.dispatch({
@@ -21624,7 +21622,6 @@
 	        });
 	    }
 
-	    console.log(state.captcha);
 	    if (state.captcha !== 'Bratislava' && state.captcha !== 'bratislava') {
 	        isFormValid = false;
 	        _index2.default.dispatch({
@@ -21634,8 +21631,7 @@
 	        });
 	    }
 
-	    state = _index2.default.getState();
-	    console.log(state.validUsername);
+	    state = _index2.default.getState();;
 
 	    return isFormValid;
 	}
@@ -22178,13 +22174,13 @@
 	    });
 	}
 
-	function sendResults(userName, score, ca, ia) {
+	function sendResults(userName, score) {
 	    $.ajax({
 	        method: 'GET',
 	        // TODO Hardcoded URL, needs to be changed ..
 	        url: "http://capitals.local.d/stats/create",
 	        context: document.body,
-	        data: { userName: userName, score: score, correctAnswers: ca, incorrectAnswers: ia }
+	        data: { userName: userName, score: score }
 	    });
 	}
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
@@ -23951,6 +23947,11 @@
 	                _react2.default.createElement(
 	                    'div',
 	                    { className: 'col-md-5' },
+	                    _react2.default.createElement(
+	                        'div',
+	                        { className: 'col-xs-12 text-center', style: { borderRight: '1px solid #f4f4f4' } },
+	                        _react2.default.createElement(_Timer2.default, null)
+	                    ),
 	                    _react2.default.createElement(
 	                        'div',
 	                        { className: 'col-md-12' },
@@ -28764,6 +28765,7 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Intro).call(this, props));
 
 	        _this.onNameChange = _this.onNameChange.bind(_this);
+	        // TODO We should bind using arrow function here .. This is an old way ..
 	        _this.renderValidUsernameErrorClass = _this.renderValidUsernameErrorClass.bind(_this);
 	        _this.renderValidCaptchaErrorClass = _this.renderValidCaptchaErrorClass.bind(_this);
 	        userName: '';
@@ -28999,7 +29001,6 @@
 	                                    )
 	                                ),
 	                                this.props.results.map(function (item, i) {
-	                                    console.log(item);
 	                                    return _react2.default.createElement(
 	                                        'tr',
 	                                        { key: i },

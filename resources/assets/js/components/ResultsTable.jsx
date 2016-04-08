@@ -44,7 +44,6 @@ export default class ResultsTable extends Component {
 
                             {
                                 this.props.results.map(function(item, i) {
-                                    console.log(item);
                                     return (
                                         <tr key={i}>
                                             <td>{i+1}</td>

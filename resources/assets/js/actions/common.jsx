@@ -42,9 +42,7 @@ export function selectAnswer(answer) {
         state = store.getState();
         db.sendResults(
             state.userName,
-            state.correctAnswerCount*100 + state.bonusPoints,
-            state.correctAnswerCount,
-            state.incorrectAnswerCount
+            state.correctAnswerCount*100 + state.bonusPoints
         )
     }
 
@@ -164,8 +162,6 @@ function isIntroFormValid() {
     let state = store.getState();
     let isFormValid = true;
 
-    console.log(state.validUsername);
-
     if (state.userName === '') {
         isFormValid = false;
         store.dispatch({
@@ -175,7 +171,6 @@ function isIntroFormValid() {
         })
     }
 
-    console.log(state.captcha);
     if ((state.captcha !== 'Bratislava') && (state.captcha !== 'bratislava')) {
         isFormValid = false;
         store.dispatch({
@@ -185,8 +180,7 @@ function isIntroFormValid() {
         })
     }
 
-    state = store.getState();
-    console.log(state.validUsername);
+    state = store.getState();;
 
     return isFormValid;
 }
