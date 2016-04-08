@@ -39,8 +39,13 @@ export function selectAnswer(answer) {
 
         // TODO put total score in the store .. Don't calculate it ..
         // TODO Make sure, there's security implemented .. So it's not possible to submit results manually ..
-
-        db.sendResults(state.userName, state.correctAnswerCount*100 + state.bonusPoints);
+        state = store.getState();
+        db.sendResults(
+            state.userName,
+            state.correctAnswerCount*100 + state.bonusPoints,
+            state.correctAnswerCount,
+            state.incorrectAnswerCount
+        )
     }
 
 }
@@ -128,12 +133,14 @@ function init(allCountries) {
     }
 }
 
-export function introFormIsNotValid() {
-    return {
-        type: 'INTRO_FORM_NOT_VALID',
-        introFormValid: false
-    }
-}
+//export function introFormIsNotValid(invalidFieldNames) {
+//
+//    store.dispatch({
+//        type: 'INTRO_FORM_NOT_VALID',
+//        invalidFieldNames: invalidFieldNames
+//    });
+//
+//}
 
 export function introFormIsValid() {
     return {
@@ -142,21 +149,63 @@ export function introFormIsValid() {
     }
 }
 
+export function quit() {
+    store.dispatch(displayResults());
+}
+
+export function displayResults() {
+    return {
+        type: 'DEFAULT'
+    }
+}
+
+function isIntroFormValid() {
+
+    let state = store.getState();
+    let isFormValid = true;
+
+    console.log(state.validUsername);
+
+    if (state.userName === '') {
+        isFormValid = false;
+        store.dispatch({
+            type: 'INTRO_FORM_NOT_VALID',
+            startAppButtonPressed: true,
+            validUsername: false
+        })
+    }
+
+    console.log(state.captcha);
+    if ((state.captcha !== 'Bratislava') && (state.captcha !== 'bratislava')) {
+        isFormValid = false;
+        store.dispatch({
+            type: 'INTRO_FORM_NOT_VALID',
+            startAppButtonPressed: true,
+            validCaptcha: false
+        })
+    }
+
+    state = store.getState();
+    console.log(state.validUsername);
+
+    return isFormValid;
+}
+
 export function startApplicationAndLoadQuestion() {
+    // TODO Make state global, so I don't have to fetch it in every function ..
     let state = store.getState();
     let allCountries = state.allCountries;
     let introFormValid = state.infoFormValid;
 
-    (state.userName === undefined) ? introFormValid = false : introFormValid = true;
-
+    // Everytime the application is started, reset the state ...
     store.dispatch(resetState());
 
+    // Validate the input form ..
+    introFormValid = isIntroFormValid();
+
     if (introFormValid) {
-        store.dispatch(introFormIsValid());
         store.dispatch(startApplication());
         store.dispatch(loadNewQuestion(allCountries));
-    } else {
-        store.dispatch(introFormIsNotValid());
     }
 }
 
@@ -164,16 +213,17 @@ export function decreaseBonus(decreaseStep) {
     store.dispatch(decreaseBonusPoints(decreaseStep));
 }
 
+// TODO Probably it would be nice to return geographically close countries here ..
 function getRandomOptions() {
 
-    // Here I will choose 5 random countries as answer options ..
+    // Here I will choose some random countries as answer options ..
     let countries = [];
     let i = 0;
 
     let state = store.getState();
     let allCountries = state.allCountries;
 
-    // let's load 5 possible answers
+    // let's load 3 possible 'wrong' answers. The correct answer is not included here ..
     do {
         let country = getRandomCountry(allCountries);
         if (country.option !== '') {
@@ -186,9 +236,15 @@ function getRandomOptions() {
 
 }
 
+/*
+ * Return a random country object from the list of all available countries from the json ..
+ */
 function getRandomCountry(allCountries) {
-    var randomKey = Math.floor(Math.random()*allCountries.length)+1;
-    // Return random country from the list of all countries ..
+    let randomKey;
+    // Nasty fix: Some json entries return undefined ..
+    do {
+        randomKey = Math.floor(Math.random()*allCountries.length)+1;
+    } while (allCountries[randomKey] == undefined)
     return allCountries[randomKey];
 }
 
@@ -206,6 +262,13 @@ export function setUsername(username) {
     })
 }
 
+export function setCaptcha(c) {
+    store.dispatch({
+        type: 'SET_CAPTCHA',
+        captcha: c
+    })
+}
+
 export function resetState() {
     return {
         type: 'RESET_STATE',
@@ -216,6 +279,8 @@ export function resetState() {
         gameOver:false,
         incorrectAnswerCount:0,
         introFormValid:true,
+        validUsername: true,
+        validCaptcha: true,
         resultsLoaded:true,
         startAppButtonPressed:true,
     }

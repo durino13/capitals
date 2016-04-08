@@ -59,8 +59,15 @@ export default function reducer(state, action) {
                 startAppButtonPressed: true
             })
         case 'INTRO_FORM_NOT_VALID':
+            let vu = state.validUsername;
+            let vc = state.validCaptcha;
+            (action.validUsername != undefined) ? vu = action.validUsername : vu = state.validUsername;
+            (action.validCaptcha != undefined) ? vc = action.validCaptcha : vc = state.validCaptcha;
+
             return Object.assign({}, state, {
                 introFormValid: false,
+                validUsername: vu,
+                validCaptcha: vc,
                 startAppButtonPressed: true
             })
         case 'RESET_STATE':
@@ -73,11 +80,17 @@ export default function reducer(state, action) {
                 incorrectAnswerCount: action.incorrectAnswerCount,
                 introFormValid: action.introFormValid,
                 resultsLoaded: action.resultsLoaded,
-                startAppButtonPressed: action.startAppButtonPressed
+                startAppButtonPressed: action.startAppButtonPressed,
+                validUsername: action.validUsername,
+                validCaptcha: action.validCaptcha
             })
         case 'SET_USERNAME':
             return Object.assign({}, state, {
                 userName: action.userName
+            })
+        case 'SET_CAPTCHA':
+            return Object.assign({}, state, {
+                captcha: action.captcha
             })
         case 'DEFAULT':
         default:
@@ -91,6 +104,9 @@ export default function reducer(state, action) {
 
                 // Username
                 userName: '',
+
+                // Captcha for the application, so bots can't enter the Quiz
+                captcha: '',
 
                 // Bonus points
                 bonusPoints: 1000,
@@ -140,6 +156,10 @@ export default function reducer(state, action) {
                  */
 
                 introFormValid: false,
+
+                validUsername: true,
+
+                validCaptcha: true,
 
                 startAppButtonPressed: false
             }

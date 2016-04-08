@@ -41,7 +41,7 @@ export default class QuizResults extends Component {
                                     </div>
                                     <div className="modal-footer">
                                         <button type="button" className="btn btn-outline" data-dismiss="modal" onClick={() => {actions.replay()}}>Replay</button>
-                                        <button type="button" className="btn btn-outline" data-dismiss="modal" onClick={actions.quit.bind(this)}>Quit</button>
+                                        <button type="button" className="btn btn-outline" data-dismiss="modal" onClick={() => {actions.quit()}}>Quit</button>
                                     </div>
                                 </div>
                             </div>

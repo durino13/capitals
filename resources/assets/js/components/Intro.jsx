@@ -5,7 +5,9 @@ import { connect } from 'react-redux';
 
 const mapStateToProps = (state) => {
     return {
-        introFormValid: state.introFormValid,
+        //introFormValid: state.introFormValid,
+        validUsername: state.validUsername,
+        validCaptcha: state.validCaptcha,
         startAppButtonPressed: state.startAppButtonPressed
     }
 }
@@ -17,7 +19,8 @@ export default class Intro extends Component {
         super(props);
         // I have to do this, so the methods will be accessible in the render method ..
         this.onNameChange = this.onNameChange.bind(this);
-        this.renderErrorClass = this.renderErrorClass.bind(this);
+        this.renderValidUsernameErrorClass = this.renderValidUsernameErrorClass.bind(this);
+        this.renderValidCaptchaErrorClass = this.renderValidCaptchaErrorClass.bind(this);
         userName: '';
     }
 
@@ -25,8 +28,16 @@ export default class Intro extends Component {
         common.setUsername(e.target.value);
     }
 
-    renderErrorClass() {
-        return (!(this.props.introFormValid) && this.props.startAppButtonPressed) ? 'form-group has-error' : 'form-group';
+    onCaptchaChange(e) {
+        common.setCaptcha(e.target.value);
+    }
+
+    renderValidUsernameErrorClass() {
+        return (!(this.props.validUsername) && this.props.startAppButtonPressed) ? 'form-group has-error' : 'form-group';
+    }
+
+    renderValidCaptchaErrorClass() {
+        return (!(this.props.validCaptcha) && this.props.startAppButtonPressed) ? 'form-group has-error' : 'form-group';
     }
 
     render() {
@@ -44,16 +55,16 @@ export default class Intro extends Component {
                             </div>
                             <div className="form-horizontal">
                                 <div className="box-body">
-                                    <div className={this.renderErrorClass()}>
+                                    <div className={this.renderValidUsernameErrorClass()}>
                                         <label htmlFor="name" className="col-sm-3 control-label">Your name</label>
                                         <div className="col-sm-9">
                                             <input type="text" className="form-control" id="name" placeholder="Enter your name" autoComplete="off" onChange={this.onNameChange} />
                                         </div>
                                     </div>
-                                    <div className="form-group">
+                                    <div className={this.renderValidCaptchaErrorClass()}>
                                         <label htmlFor="captcha" className="col-sm-3 control-label">Captcha</label>
                                         <div className="col-sm-9">
-                                            <input type="text" className="form-control" id="captcha" placeholder="What is the capital of Slovakia?" autoComplete="off" />
+                                            <input type="text" className="form-control" id="captcha" placeholder="What is the capital of Slovakia?" autoComplete="off" onChange={this.onCaptchaChange} />
                                         </div>
                                     </div>
                                 </div>

@@ -8,7 +8,7 @@ import * as common from '../actions/common.jsx';
 const mapStateToProps = (state) => {
     return {
         resultsLoaded: state.resultsLoaded,
-        results: state.results
+        results: state.results,
     }
 }
 
@@ -38,8 +38,8 @@ export default class ResultsTable extends Component {
                             <tr>
                                 <th style={{width: 10}}>#</th>
                                 <th>Name</th>
-                                <th>Progress</th>
-                                <th style={{width: 40}}>Rate</th>
+                                <th>Date</th>
+                                <th style={{width: 40}}>Score</th>
                             </tr>
 
                             {
@@ -48,8 +48,8 @@ export default class ResultsTable extends Component {
                                         <tr key={i}>
                                             <td>{i+1}</td>
                                             <td>{item.username}</td>
-                                            <td>{item.username}</td>
-                                            <td>{item.score}</td>
+                                            <td>{item.date_created}</td>
+                                            <td><span className="badge bg-light-blue">{item.score}</span></td>
                                         </tr>
                                     )
                                 })

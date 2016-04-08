@@ -5,5 +5,5 @@ export function replay() {
 }
 
 export function quit() {
-    console.log('Quit');
+    common.quit();
 }

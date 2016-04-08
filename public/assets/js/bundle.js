@@ -21430,12 +21430,14 @@
 	exports.loadNewQuestionAction = loadNewQuestionAction;
 	exports.loadNewQuestion = loadNewQuestion;
 	exports.loadAllCountries = loadAllCountries;
-	exports.introFormIsNotValid = introFormIsNotValid;
 	exports.introFormIsValid = introFormIsValid;
+	exports.quit = quit;
+	exports.displayResults = displayResults;
 	exports.startApplicationAndLoadQuestion = startApplicationAndLoadQuestion;
 	exports.decreaseBonus = decreaseBonus;
 	exports.loadResults = loadResults;
 	exports.setUsername = setUsername;
+	exports.setCaptcha = setCaptcha;
 	exports.resetState = resetState;
 
 	var _index = __webpack_require__(1);
@@ -21494,8 +21496,8 @@
 
 	        // TODO put total score in the store .. Don't calculate it ..
 	        // TODO Make sure, there's security implemented .. So it's not possible to submit results manually ..
-
-	        db.sendResults(state.userName, state.correctAnswerCount * 100 + state.bonusPoints);
+	        state = _index2.default.getState();
+	        db.sendResults(state.userName, state.correctAnswerCount * 100 + state.bonusPoints, state.correctAnswerCount, state.incorrectAnswerCount);
 	    }
 	}
 
@@ -21580,12 +21582,14 @@
 	    };
 	}
 
-	function introFormIsNotValid() {
-	    return {
-	        type: 'INTRO_FORM_NOT_VALID',
-	        introFormValid: false
-	    };
-	}
+	//export function introFormIsNotValid(invalidFieldNames) {
+	//
+	//    store.dispatch({
+	//        type: 'INTRO_FORM_NOT_VALID',
+	//        invalidFieldNames: invalidFieldNames
+	//    });
+	//
+	//}
 
 	function introFormIsValid() {
 	    return {
@@ -21594,21 +21598,63 @@
 	    };
 	}
 
+	function quit() {
+	    _index2.default.dispatch(displayResults());
+	}
+
+	function displayResults() {
+	    return {
+	        type: 'DEFAULT'
+	    };
+	}
+
+	function isIntroFormValid() {
+
+	    var state = _index2.default.getState();
+	    var isFormValid = true;
+
+	    console.log(state.validUsername);
+
+	    if (state.userName === '') {
+	        isFormValid = false;
+	        _index2.default.dispatch({
+	            type: 'INTRO_FORM_NOT_VALID',
+	            startAppButtonPressed: true,
+	            validUsername: false
+	        });
+	    }
+
+	    console.log(state.captcha);
+	    if (state.captcha !== 'Bratislava' && state.captcha !== 'bratislava') {
+	        isFormValid = false;
+	        _index2.default.dispatch({
+	            type: 'INTRO_FORM_NOT_VALID',
+	            startAppButtonPressed: true,
+	            validCaptcha: false
+	        });
+	    }
+
+	    state = _index2.default.getState();
+	    console.log(state.validUsername);
+
+	    return isFormValid;
+	}
+
 	function startApplicationAndLoadQuestion() {
+	    // TODO Make state global, so I don't have to fetch it in every function ..
 	    var state = _index2.default.getState();
 	    var allCountries = state.allCountries;
 	    var introFormValid = state.infoFormValid;
 
-	    state.userName === undefined ? introFormValid = false : introFormValid = true;
-
+	    // Everytime the application is started, reset the state ...
 	    _index2.default.dispatch(resetState());
 
+	    // Validate the input form ..
+	    introFormValid = isIntroFormValid();
+
 	    if (introFormValid) {
-	        _index2.default.dispatch(introFormIsValid());
 	        _index2.default.dispatch(startApplication());
 	        _index2.default.dispatch(loadNewQuestion(allCountries));
-	    } else {
-	        _index2.default.dispatch(introFormIsNotValid());
 	    }
 	}
 
@@ -21616,16 +21662,17 @@
 	    _index2.default.dispatch(decreaseBonusPoints(decreaseStep));
 	}
 
+	// TODO Probably it would be nice to return geographically close countries here ..
 	function getRandomOptions() {
 
-	    // Here I will choose 5 random countries as answer options ..
+	    // Here I will choose some random countries as answer options ..
 	    var countries = [];
 	    var i = 0;
 
 	    var state = _index2.default.getState();
 	    var allCountries = state.allCountries;
 
-	    // let's load 5 possible answers
+	    // let's load 3 possible 'wrong' answers. The correct answer is not included here ..
 	    do {
 	        var country = getRandomCountry(allCountries);
 	        if (country.option !== '') {
@@ -21637,9 +21684,15 @@
 	    return countries;
 	}
 
+	/*
+	 * Return a random country object from the list of all available countries from the json ..
+	 */
 	function getRandomCountry(allCountries) {
-	    var randomKey = Math.floor(Math.random() * allCountries.length) + 1;
-	    // Return random country from the list of all countries ..
+	    var randomKey = void 0;
+	    // Nasty fix: Some json entries return undefined ..
+	    do {
+	        randomKey = Math.floor(Math.random() * allCountries.length) + 1;
+	    } while (allCountries[randomKey] == undefined);
 	    return allCountries[randomKey];
 	}
 
@@ -21657,6 +21710,13 @@
 	    });
 	}
 
+	function setCaptcha(c) {
+	    _index2.default.dispatch({
+	        type: 'SET_CAPTCHA',
+	        captcha: c
+	    });
+	}
+
 	function resetState() {
 	    return {
 	        type: 'RESET_STATE',
@@ -21667,6 +21727,8 @@
 	        gameOver: false,
 	        incorrectAnswerCount: 0,
 	        introFormValid: true,
+	        validUsername: true,
+	        validCaptcha: true,
 	        resultsLoaded: true,
 	        startAppButtonPressed: true
 	    };
@@ -22116,13 +22178,13 @@
 	    });
 	}
 
-	function sendResults(userName, score) {
+	function sendResults(userName, score, ca, ia) {
 	    $.ajax({
 	        method: 'GET',
 	        // TODO Hardcoded URL, needs to be changed ..
 	        url: "http://capitals.local.d/stats/create",
 	        context: document.body,
-	        data: { userName: userName, score: score }
+	        data: { userName: userName, score: score, correctAnswers: ca, incorrectAnswers: ia }
 	    });
 	}
 	/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(187)))
@@ -23759,9 +23821,6 @@
 	 */
 	function diffState(currentState, oldState) {
 	    var differencesArray = [];
-
-	    //console.log('old: '+ oldState.allCountries);
-	    //console.log('current: '+ currentState.allCountries);
 
 	    for (var key in currentState) {
 	        if (currentState[key] != oldState[key]) {
@@ -26032,7 +26091,9 @@
 	                                        ),
 	                                        _react2.default.createElement(
 	                                            'button',
-	                                            { type: 'button', className: 'btn btn-outline', 'data-dismiss': 'modal', onClick: actions.quit.bind(this) },
+	                                            { type: 'button', className: 'btn btn-outline', 'data-dismiss': 'modal', onClick: function onClick() {
+	                                                    actions.quit();
+	                                                } },
 	                                            'Quit'
 	                                        )
 	                                    )
@@ -26072,7 +26133,7 @@
 	}
 
 	function quit() {
-	    console.log('Quit');
+	    common.quit();
 	}
 
 /***/ },
@@ -28685,7 +28746,9 @@
 
 	var mapStateToProps = function mapStateToProps(state) {
 	    return {
-	        introFormValid: state.introFormValid,
+	        //introFormValid: state.introFormValid,
+	        validUsername: state.validUsername,
+	        validCaptcha: state.validCaptcha,
 	        startAppButtonPressed: state.startAppButtonPressed
 	    };
 	};
@@ -28701,7 +28764,8 @@
 	        var _this = _possibleConstructorReturn(this, Object.getPrototypeOf(Intro).call(this, props));
 
 	        _this.onNameChange = _this.onNameChange.bind(_this);
-	        _this.renderErrorClass = _this.renderErrorClass.bind(_this);
+	        _this.renderValidUsernameErrorClass = _this.renderValidUsernameErrorClass.bind(_this);
+	        _this.renderValidCaptchaErrorClass = _this.renderValidCaptchaErrorClass.bind(_this);
 	        userName: '';
 	        return _this;
 	    }
@@ -28712,9 +28776,19 @@
 	            common.setUsername(e.target.value);
 	        }
 	    }, {
-	        key: 'renderErrorClass',
-	        value: function renderErrorClass() {
-	            return !this.props.introFormValid && this.props.startAppButtonPressed ? 'form-group has-error' : 'form-group';
+	        key: 'onCaptchaChange',
+	        value: function onCaptchaChange(e) {
+	            common.setCaptcha(e.target.value);
+	        }
+	    }, {
+	        key: 'renderValidUsernameErrorClass',
+	        value: function renderValidUsernameErrorClass() {
+	            return !this.props.validUsername && this.props.startAppButtonPressed ? 'form-group has-error' : 'form-group';
+	        }
+	    }, {
+	        key: 'renderValidCaptchaErrorClass',
+	        value: function renderValidCaptchaErrorClass() {
+	            return !this.props.validCaptcha && this.props.startAppButtonPressed ? 'form-group has-error' : 'form-group';
 	        }
 	    }, {
 	        key: 'render',
@@ -28750,7 +28824,7 @@
 	                                    { className: 'box-body' },
 	                                    _react2.default.createElement(
 	                                        'div',
-	                                        { className: this.renderErrorClass() },
+	                                        { className: this.renderValidUsernameErrorClass() },
 	                                        _react2.default.createElement(
 	                                            'label',
 	                                            { htmlFor: 'name', className: 'col-sm-3 control-label' },
@@ -28764,7 +28838,7 @@
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        'div',
-	                                        { className: 'form-group' },
+	                                        { className: this.renderValidCaptchaErrorClass() },
 	                                        _react2.default.createElement(
 	                                            'label',
 	                                            { htmlFor: 'captcha', className: 'col-sm-3 control-label' },
@@ -28773,7 +28847,7 @@
 	                                        _react2.default.createElement(
 	                                            'div',
 	                                            { className: 'col-sm-9' },
-	                                            _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'captcha', placeholder: 'What is the capital of Slovakia?', autoComplete: 'off' })
+	                                            _react2.default.createElement('input', { type: 'text', className: 'form-control', id: 'captcha', placeholder: 'What is the capital of Slovakia?', autoComplete: 'off', onChange: this.onCaptchaChange })
 	                                        )
 	                                    )
 	                                ),
@@ -28916,12 +28990,12 @@
 	                                    _react2.default.createElement(
 	                                        'th',
 	                                        null,
-	                                        'Progress'
+	                                        'Date'
 	                                    ),
 	                                    _react2.default.createElement(
 	                                        'th',
 	                                        { style: { width: 40 } },
-	                                        'Rate'
+	                                        'Score'
 	                                    )
 	                                ),
 	                                this.props.results.map(function (item, i) {
@@ -28941,12 +29015,16 @@
 	                                        _react2.default.createElement(
 	                                            'td',
 	                                            null,
-	                                            item.username
+	                                            item.date_created
 	                                        ),
 	                                        _react2.default.createElement(
 	                                            'td',
 	                                            null,
-	                                            item.score
+	                                            _react2.default.createElement(
+	                                                'span',
+	                                                { className: 'badge bg-light-blue' },
+	                                                item.score
+	                                            )
 	                                        )
 	                                    );
 	                                })
@@ -36032,8 +36110,15 @@
 	                startAppButtonPressed: true
 	            });
 	        case 'INTRO_FORM_NOT_VALID':
+	            var vu = state.validUsername;
+	            var vc = state.validCaptcha;
+	            action.validUsername != undefined ? vu = action.validUsername : vu = state.validUsername;
+	            action.validCaptcha != undefined ? vc = action.validCaptcha : vc = state.validCaptcha;
+
 	            return Object.assign({}, state, {
 	                introFormValid: false,
+	                validUsername: vu,
+	                validCaptcha: vc,
 	                startAppButtonPressed: true
 	            });
 	        case 'RESET_STATE':
@@ -36046,11 +36131,17 @@
 	                incorrectAnswerCount: action.incorrectAnswerCount,
 	                introFormValid: action.introFormValid,
 	                resultsLoaded: action.resultsLoaded,
-	                startAppButtonPressed: action.startAppButtonPressed
+	                startAppButtonPressed: action.startAppButtonPressed,
+	                validUsername: action.validUsername,
+	                validCaptcha: action.validCaptcha
 	            });
 	        case 'SET_USERNAME':
 	            return Object.assign({}, state, {
 	                userName: action.userName
+	            });
+	        case 'SET_CAPTCHA':
+	            return Object.assign({}, state, {
+	                captcha: action.captcha
 	            });
 	        case 'DEFAULT':
 	        default:
@@ -36064,6 +36155,9 @@
 
 	                // Username
 	                userName: '',
+
+	                // Captcha for the application, so bots can't enter the Quiz
+	                captcha: '',
 
 	                // Bonus points
 	                bonusPoints: 1000,
@@ -36113,6 +36207,10 @@
 	                 */
 
 	                introFormValid: false,
+
+	                validUsername: true,
+
+	                validCaptcha: true,
 
 	                startAppButtonPressed: false
 	            };
