@@ -33,6 +33,7 @@ class StatsController extends Controller
             $stats->score = $request->score;
             $stats->correct_answers = $request->correctAnswers;
             $stats->incorrect_answers = $request->incorrectAnswers;
+            $stats->date_created = $request->date_created;
 
             if ($stats->save()) {
                 echo json_encode(['result' => true]);

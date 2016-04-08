@@ -28999,6 +28999,7 @@
 	                                    )
 	                                ),
 	                                this.props.results.map(function (item, i) {
+	                                    console.log(item);
 	                                    return _react2.default.createElement(
 	                                        'tr',
 	                                        { key: i },
@@ -29015,7 +29016,7 @@
 	                                        _react2.default.createElement(
 	                                            'td',
 	                                            null,
-	                                            item.date_created
+	                                            item.created_at
 	                                        ),
 	                                        _react2.default.createElement(
 	                                            'td',

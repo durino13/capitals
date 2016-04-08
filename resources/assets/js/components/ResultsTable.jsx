@@ -44,11 +44,12 @@ export default class ResultsTable extends Component {
 
                             {
                                 this.props.results.map(function(item, i) {
+                                    console.log(item);
                                     return (
                                         <tr key={i}>
                                             <td>{i+1}</td>
                                             <td>{item.username}</td>
-                                            <td>{item.date_created}</td>
+                                            <td>{item.created_at}</td>
                                             <td><span className="badge bg-light-blue">{item.score}</span></td>
                                         </tr>
                                     )
