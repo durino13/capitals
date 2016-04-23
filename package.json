@@ -9,6 +9,7 @@
     "bootstrap-sass": "^3.0.0",
     "clean-webpack-plugin": "^0.1.8",
     "copy-webpack-plugin": "^1.1.1",
+    "dotenv": "^2.0.0",
     "font-awesome": "^4.5.0",
     "isomorphic-fetch": "^2.2.1",
     "jquery": "^2.2.2",

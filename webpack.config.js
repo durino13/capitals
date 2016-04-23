@@ -45,5 +45,8 @@ module.exports = {
     },
     watchOptions: {
         poll: true
+    },
+    node: {
+        fs: 'empty'
     }
 };
