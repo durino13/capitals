@@ -6,3 +6,4 @@ Homestead.json
 .env
 .idea/
 /resources/assets/js/.env.js
+npm-debug.log.*
