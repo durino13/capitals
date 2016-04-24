@@ -29,7 +29,7 @@ export default class ResultsTable extends Component {
                 <div className="box">
 
                     <div className="box-header with-border">
-                        <h3 className="box-title">Top 10 results</h3>
+                        <h3 className="box-title">Top 5 results</h3>
                     </div>
 
                     <div className="box-body">
