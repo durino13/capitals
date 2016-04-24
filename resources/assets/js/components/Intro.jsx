@@ -80,6 +80,7 @@ export default class Intro extends Component {
                 <div className="row">
                     <div className="col-md-4 col-md-offset-4">
                         <Score />
+                        <div><a href="https://github.com/durino13/capitals">You can find the source code on Github</a></div>
                     </div>
                 </div>
 
